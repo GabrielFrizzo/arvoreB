@@ -1,5 +1,9 @@
 #include "../include/arvoreb.h"
-
+#include "buscaArvoreb.c"
+#include "criaArvoreb.c"
+#include "insereArvoreb.c"
+#include "printArvoreb.c"
+#include "removeArvoreb.c"
 
 /*Função principal:*/
 int main () {
