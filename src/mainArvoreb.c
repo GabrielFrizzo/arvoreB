@@ -1,4 +1,3 @@
-#include "../include/arvoreb.h"
 #include "buscaArvoreb.c"
 #include "criaArvoreb.c"
 #include "insereArvoreb.c"
