@@ -2,15 +2,53 @@
 
 /*Descrição: ????*/
 Arvore* dividir_no (Arvore *x, int i, Arvore *y) {
-   /*Completar!!!!!!!!!!!!!!*/
-   printf("Completar\n");
+   Arvore* z = criar();
+   z->folha = y->folha;
+   z->n = T-1;
+   int j;
+   for (j = 1; j <= T-1; j++) {
+       z->chaves[j] = y->chaves[j+T];
+   }
+   if (!y->folha) {
+       for (j = 1; j <= T; j++) {
+           z->filhos[j] = y->filhos[j+T];
+       }
+   }
+   y->n = T-1;
+   for (j = x->n + 1; j >= i+1; j--) {
+       x->filhos[j+1] = x->filhos[j];
+   }
+   x->filhos[i+1] = z;
+   for (j = x->n; j >= i; j--) {
+       x->chaves[j+1] = x->chaves[j];
+   }
+   x->chaves[i] = y->chaves[T];
+   x->n++;
    return x;
 }
 
 /*Descrição: ????*/
 Arvore* inserir_arvore_nao_cheia (Arvore *x, TIPO k) {
-   /*Completar!!!!!!!!!!!!!!*/
-   printf("Completar\n");
+   int i = x->n;
+   if (x->folha) {
+       while (i >= 1 && k < x->chaves[i]) {
+           x->chaves[i+1] = x->chaves[i];
+           i--;
+       }
+       x->chaves[i+1] = k;
+       x->n++;
+   } else {
+       while (i >= 1 && k < x->chaves[i]) {
+           i--;
+       }
+       i++;
+       if (x->filhos[i]->n == 2*T-1) {
+           x = dividir_no(x, i, x->filhos[i]);
+           if (k > x->chaves[i])
+               i++;
+       }
+       x->filhos[i] = inserir_arvore_nao_cheia(x->filhos[i], k);
+   }
    return x;
 }
 
