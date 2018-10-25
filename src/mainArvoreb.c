@@ -28,9 +28,23 @@ int main () {
     a = inserir (a, 'Z');
     a = inserir (a, 'E');
 
-     imprimir (a, 0);
+    imprimir (a, 0);
 
-     a = remover(a, 'D');
+    a = remover(a, 'D');
+    a = remover(a, 'F');
+
+    imprimir (a, 0);
+
+    a = remover(a, 'E');
+
+
+    imprimir (a, 0);
+
+    a = remover(a, 'Q');
+
+    imprimir (a, 0);
+
+    a = remover(a, 'T');
 
     imprimir (a, 0);
 
