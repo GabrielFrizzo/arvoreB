@@ -1,5 +1,11 @@
 #include "../include/arvoreb.h"
 
+Arvore* filho_valido (Arvore* a, int index)
+{
+    if (index <= a->n) { return a->filhos[index]; }
+    else { return NULL; }
+}
+
 /*Descrição ...*/
 Arvore* remover_valor_de_no (Arvore *a, int index){
     int i;
@@ -142,8 +148,8 @@ Arvore *remover (Arvore *a, TIPO k){
         Arvore* filho = a->filhos[index];
         if(filho->n >= T){ a->filhos[index] = remover(a->filhos[index], k); }
         else{
-            Arvore* irmao_esq = a->filhos[index-1];
-            Arvore* irmao_dir = a->filhos[index+1];
+            Arvore* irmao_esq = filho_valido(a, index-1);
+            Arvore* irmao_dir = filho_valido(a, index+1);
             if(irmao_esq && irmao_esq->n >= T){
                 filho = shift_dir(filho);
                 filho->chaves[0] = irmao_esq->chaves[irmao_esq->n-1];
