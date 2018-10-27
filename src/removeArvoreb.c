@@ -121,8 +121,7 @@ Arvore *remover (Arvore *a, TIPO k){
 
     /*Completar!!!!!!!!!!!!!!*/
     if (a == NULL) {
-        /*Completar!!!*/
-        printf("Completar\n");
+        printf("A árvore está vazia!");
     }
 
     index = buscar_index_remocao (a, k);
@@ -140,7 +139,7 @@ Arvore *remover (Arvore *a, TIPO k){
     else{
         //Se este nó é um nó folha, então a chave não está na árvore
         if (a->folha){
-            printf("\nA chave %c não está na árvore.\n",k);
+            printf("\nA chave %02d não está na árvore.\n",k);
             return a;
         }
 
@@ -151,13 +150,13 @@ Arvore *remover (Arvore *a, TIPO k){
             Arvore* irmao_dir = filho_valido(a, index+1);
             if(irmao_esq && irmao_esq->n >= T){
                 filho = shift_dir(filho);
-                filho->chaves[0] = irmao_esq->chaves[irmao_esq->n-1];
+                filho->chaves[0] = a->chaves[index-1];
+                a->chaves[index-1] = irmao_esq->chaves[irmao_esq->n-1];
                 filho->filhos[0] = irmao_esq->filhos[irmao_esq->n];
                 irmao_esq->n--;
-                filho->n++;
             }
             else if(irmao_dir && irmao_dir->n >= T){
-                filho->chaves[filho->n] = irmao_dir->chaves[0];
+                filho->chaves[filho->n] = a->chaves[index-1];
                 filho->filhos[filho->n+1] = irmao_dir->filhos[0];
                 irmao_dir = shift_esq(irmao_dir);
                 irmao_dir->n--;
@@ -165,7 +164,7 @@ Arvore *remover (Arvore *a, TIPO k){
             }
             else{
                 if(irmao_dir){
-                    filho->chaves[filho->n] = a->chaves[index-1];
+                    filho->chaves[filho->n] = a->chaves[index];
                     filho->n++;
                     merge(filho, irmao_dir);
                     free(irmao_dir);
