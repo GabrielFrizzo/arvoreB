@@ -65,10 +65,9 @@ Arvore* remover_de_nao_folha (Arvore *a, int index){
 Arvore *verificar_raiz_vazia (Arvore *raiz){
     /*Se após a remoção a raiz tiver 0 chaves, tornar o primeiro filho a nova raiz se existir filho; caso contrário ajustar a raiz para NULL. Liberar a raiz antiga*/
 
-    if(raiz->n == 0){
+    if(raiz->n == 0 && !raiz->folha){
         Arvore* aux = raiz;
-        if(raiz->folha){ raiz = NULL; }
-        else { raiz = raiz->filhos[0]; }
+        raiz = raiz->filhos[0];
         free(aux);
     }
 
