@@ -3,7 +3,10 @@
 /*Descrição ...*/
 Arvore* remover_valor_de_no (Arvore *a, int index){
     int i;
-    for(i = index; i < a->n; i++){ a->chaves[i] = a->chaves[i+1]; }
+    for(i = index; i < a->n; i++){
+        a->chaves[i] = a->chaves[i+1];
+        a->filhos[i+1] = a->filhos[i+2];
+    }
     a->n--;
     return a;
 }
@@ -62,8 +65,12 @@ Arvore* remover_de_nao_folha (Arvore *a, int index){
 Arvore *verificar_raiz_vazia (Arvore *raiz){
     /*Se após a remoção a raiz tiver 0 chaves, tornar o primeiro filho a nova raiz se existir filho; caso contrário ajustar a raiz para NULL. Liberar a raiz antiga*/
 
-    /*Completar!!!! */
-    printf("Completar\n");
+    if(raiz->n == 0){
+        Arvore* aux = raiz;
+        if(raiz->folha){ raiz = NULL; }
+        else { raiz = raiz->filhos[0]; }
+        free(aux);
+    }
 
     return raiz;
 }
@@ -81,6 +88,26 @@ int buscar_index_remocao (Arvore *a, TIPO chave) {
     }
 
     return i;
+}
+
+Arvore* shift_dir(Arvore* a){
+    int i;
+    for(i = a->n-1; i > 0; i--){
+        a->chaves[i] = a->chaves[i-1];
+        a->filhos[i+1] = a->filhos[i];
+    }
+    a->filhos[1] = a->filhos[0];
+    return a;
+}
+
+Arvore* shift_esq(Arvore* a){
+    int i;
+    a->filhos[0] = a->filhos[1];
+    for(i = 0; i < a->n-1; i++){
+        a->chaves[i] = a->chaves[i+1];
+        a->filhos[i+1] = a->filhos[i+2];
+    }
+    return a;
 }
 
 /*Descrição: ????*/
@@ -118,20 +145,36 @@ Arvore *remover (Arvore *a, TIPO k){
             Arvore* irmao_esq = a->filhos[index-1];
             Arvore* irmao_dir = a->filhos[index+1];
             if(irmao_esq && irmao_esq->n >= T){
-                for(i = filho->n; i > 0; i--){ filho[i] = filho[i-1]; }
-                filho[0] = irmao_esq[irmao_esq->n];
+                filho = shift_dir(filho);
+                filho->chaves[0] = irmao_esq->chaves[irmao_esq->n-1];
+                filho->filhos[0] = irmao_esq->filhos[irmao_esq->n];
                 irmao_esq->n--;
                 filho->n++;
             }
             else if(irmao_dir && irmao_dir->n >= T){
-                filho[filho->n] = irmao_dir[0];
-                for(i = 0; i < irmao_dir->n-1; i++){ irmao_dir[i] = irmao_dir[i+1]; }
+                filho->chaves[filho->n] = irmao_dir->chaves[0];
+                filho->filhos[filho->n+1] = irmao_dir->filhos[0];
+                irmao_dir = shift_esq(irmao_dir);
                 irmao_dir->n--;
                 filho->n++;
             }
             else{
-                //TODO: CASO 3c
+                if(irmao_dir){
+                    filho->chaves[filho->n] = a->chaves[index-1];
+                    filho->n++;
+                    merge(filho, irmao_dir);
+                    free(irmao_dir);
+                }
+                else if(irmao_esq){
+                    irmao_esq->chaves[irmao_esq->n] = a->chaves[index-1];
+                    irmao_esq->n++;
+                    merge(irmao_esq, filho);
+                    free(filho);
+                }
+                a = remover_valor_de_no(a, index);
             }
+            index = buscar_index_remocao (a, k);
+            a->filhos[index] = remover(a->filhos[index], k);
         }
     }
     a = verificar_raiz_vazia(a);
