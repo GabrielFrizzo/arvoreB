@@ -170,7 +170,7 @@ Arvore *remover (Arvore *a, TIPO k){
                     free(irmao_dir);
                 }
                 else if(irmao_esq){
-                    irmao_esq->chaves[irmao_esq->n] = a->chaves[index];
+                    irmao_esq->chaves[irmao_esq->n] = a->chaves[index-1];
                     irmao_esq->n++;
                     merge(irmao_esq, filho);
                     free(filho);
