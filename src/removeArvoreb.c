@@ -59,7 +59,7 @@ Arvore* remover_de_nao_folha (Arvore *a, int index){
         filho_esquerda->chaves[filho_esquerda->n] = k;
         filho_esquerda->n++;
         filho_esquerda = merge(filho_esquerda, filho_direita);
-        free(filho_direita);
+        free(a->filhos[index+1]);
         remover(filho_esquerda, k);
     }
 
