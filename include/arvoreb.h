@@ -6,7 +6,7 @@
 
 #define TIPO int
 
-#define T 3           /*Número que define mínimo e máximo de chaves!*/
+#define T 3          /*Número que define mínimo e máximo de chaves!*/
 #define NOT_FOUND -1  /*Valor retornado quando o nó não existe!*/
 #define TRUE 1        /*Booleano para verdadeiro!*/
 #define FALSE 0       /*Booleano para falso!*/ 
