@@ -73,7 +73,6 @@ Arvore *verificar_raiz_vazia (Arvore *raiz){
     if(raiz->n == 0 && !raiz->folha){
         Arvore* aux = raiz;
         raiz = raiz->filhos[0];
-        free(aux);
     }
 
     return raiz;
