@@ -59,7 +59,6 @@ Arvore* remover_de_nao_folha (Arvore *a, int index){
         filho_esquerda->chaves[filho_esquerda->n] = k;
         filho_esquerda->n++;
         filho_esquerda = merge(filho_esquerda, filho_direita);
-        free(a->filhos[index+1]);
         remover(filho_esquerda, k);
     }
 
@@ -169,14 +168,12 @@ Arvore *remover (Arvore *a, TIPO k){
                     filho->chaves[filho->n] = a->chaves[index];
                     filho->n++;
                     merge(filho, irmao_dir);
-                    free(a->filhos[index+1]);
                     a = remover_valor_de_no(a, index);
                 }
                 else if(irmao_esq){
                     irmao_esq->chaves[irmao_esq->n] = a->chaves[index-1];
                     irmao_esq->n++;
                     merge(irmao_esq, filho);
-                    free(a->filhos[index-1]);
                     a = remover_valor_de_no(a, index-1);
                 }
             }
