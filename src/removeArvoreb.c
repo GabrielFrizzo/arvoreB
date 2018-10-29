@@ -2,14 +2,14 @@
 
 Arvore* filho_valido (Arvore* a, int index)
 {
-    if (index <= a->n) { return a->filhos[index]; }
+    if (index <= a->n && index >=0) { return a->filhos[index]; }
     else { return NULL; }
 }
 
 /*Descrição ...*/
 Arvore* remover_valor_de_no (Arvore *a, int index){
     int i;
-    for(i = index; i < a->n; i++){
+    for(i = index; i < a->n-1; i++){
         a->chaves[i] = a->chaves[i+1];
         a->filhos[i+1] = a->filhos[i+2];
     }
@@ -26,10 +26,10 @@ Arvore* merge(Arvore* a, Arvore* b){
     int i;
     for(i = 0; i < b->n; i++){
         a->chaves[a->n+i] = b->chaves[i];
-        a->filhos[a->n+i+1] = b->filhos[i];
+        a->filhos[a->n+i] = b->filhos[i];
     }
+    a->filhos[a->n+b->n] = b->filhos[b->n];
     a->n = a->n + b->n;
-    a->filhos[a->n+1] = b->filhos[b->n];
     return a;
 }
 
@@ -55,11 +55,11 @@ Arvore* remover_de_nao_folha (Arvore *a, int index){
     }
     /*Descrição ...*/
     else{
-        a = remover_valor_de_no(a, index);
+        remover_valor_de_no(a, index);
         filho_esquerda->chaves[filho_esquerda->n] = k;
         filho_esquerda->n++;
         filho_esquerda = merge(filho_esquerda, filho_direita);
-        free(filho_direita);
+        free(a->filhos[index+1]);
         remover(filho_esquerda, k);
     }
 
@@ -97,7 +97,7 @@ int buscar_index_remocao (Arvore *a, TIPO chave) {
 
 Arvore* shift_dir(Arvore* a){
     int i;
-    for(i = a->n-1; i > 0; i--){
+    for(i = a->n; i > 0; i--){
         a->chaves[i] = a->chaves[i-1];
         a->filhos[i+1] = a->filhos[i];
     }
@@ -121,8 +121,7 @@ Arvore *remover (Arvore *a, TIPO k){
 
     /*Completar!!!!!!!!!!!!!!*/
     if (a == NULL) {
-        /*Completar!!!*/
-        printf("Completar\n");
+        printf("A árvore está vazia!");
     }
 
     index = buscar_index_remocao (a, k);
@@ -140,7 +139,7 @@ Arvore *remover (Arvore *a, TIPO k){
     else{
         //Se este nó é um nó folha, então a chave não está na árvore
         if (a->folha){
-            printf("\nA chave %c não está na árvore.\n",k);
+            printf("\nA chave %02d não está na árvore.\n",k);
             return a;
         }
 
@@ -151,13 +150,15 @@ Arvore *remover (Arvore *a, TIPO k){
             Arvore* irmao_dir = filho_valido(a, index+1);
             if(irmao_esq && irmao_esq->n >= T){
                 filho = shift_dir(filho);
-                filho->chaves[0] = irmao_esq->chaves[irmao_esq->n-1];
+                filho->chaves[0] = a->chaves[index-1];
+                a->chaves[index-1] = irmao_esq->chaves[irmao_esq->n-1];
                 filho->filhos[0] = irmao_esq->filhos[irmao_esq->n];
                 irmao_esq->n--;
                 filho->n++;
             }
             else if(irmao_dir && irmao_dir->n >= T){
-                filho->chaves[filho->n] = irmao_dir->chaves[0];
+                filho->chaves[filho->n] = a->chaves[index];
+                a->chaves[index] = irmao_dir->chaves[0];
                 filho->filhos[filho->n+1] = irmao_dir->filhos[0];
                 irmao_dir = shift_esq(irmao_dir);
                 irmao_dir->n--;
@@ -165,18 +166,19 @@ Arvore *remover (Arvore *a, TIPO k){
             }
             else{
                 if(irmao_dir){
-                    filho->chaves[filho->n] = a->chaves[index-1];
+                    filho->chaves[filho->n] = a->chaves[index];
                     filho->n++;
                     merge(filho, irmao_dir);
-                    free(irmao_dir);
+                    free(a->filhos[index+1]);
+                    a = remover_valor_de_no(a, index);
                 }
                 else if(irmao_esq){
                     irmao_esq->chaves[irmao_esq->n] = a->chaves[index-1];
                     irmao_esq->n++;
                     merge(irmao_esq, filho);
-                    free(filho);
+                    free(a->filhos[index-1]);
+                    a = remover_valor_de_no(a, index-1);
                 }
-                a = remover_valor_de_no(a, index);
             }
             index = buscar_index_remocao (a, k);
             a->filhos[index] = remover(a->filhos[index], k);
